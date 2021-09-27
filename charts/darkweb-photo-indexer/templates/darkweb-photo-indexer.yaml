@@ -1,0 +1,24 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: darkweb-photo-indexer-deployment
+  labels:
+    app: darkweb-photo-indexer
+    tier: darkweb-photo-indexer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: darkweb-photo-indexer
+      tier: darkweb-photo-indexer
+  template:
+    metadata:
+      labels:
+        app: darkweb-photo-indexer
+        tier: darkweb-photo-indexer
+    spec:
+      containers:
+        - name: darkweb-photo-indexer
+          image: "{{ .Values.darkweb.image.name }}:{{ .Values.darkweb.image.tag }}"
+          imagePullPolicy: Always
