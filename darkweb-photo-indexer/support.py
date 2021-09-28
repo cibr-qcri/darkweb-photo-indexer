@@ -115,13 +115,13 @@ class TorHelper:
 
     @staticmethod
     def get_fingerprint(image):
-        fingerprint = None
+        out = None
         try:
-            fingerprint = extract_single(np.asarray(image)).tolist()
+            out = {"W": extract_single(np.asarray(image))}
         except ValueError:
             pass
 
-        return fingerprint
+        return out
 
     @staticmethod
     def get_exif(image):

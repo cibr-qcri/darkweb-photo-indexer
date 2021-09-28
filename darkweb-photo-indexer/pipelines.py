@@ -1,3 +1,5 @@
+import os
+import scipy.io as sio
 from datetime import datetime
 
 from .es7 import ES7
@@ -10,6 +12,19 @@ class TorPipeline(object):
         self.helper = TorHelper()
         self.es = ES7()
 
+    def persist_fingerprint(self, domain, image_url, fingerprint):
+        base_path = "/mnt/data/{domain}".format(domain=domain)
+        image_id = self.helper.get_esid(image_url)
+        try:
+            os.makedirs(base_path)
+        except OSError:
+            pass
+
+        path = "{base}/{id}".format(base=base_path, id=image_id)
+        sio.savemat(path, fingerprint)
+
+        return path
+
     def process_item(self, item, spider):
         url = item["url"]
         domain = item["domain"]
@@ -17,6 +32,8 @@ class TorPipeline(object):
 
         reports = []
         for img_url, meta in images.items():
+            fingerprint_path = self.persist_fingerprint(domain, img_url, meta["fingerprint"]) if meta["fingerprint"] \
+                else None
             tag = {
                 "_id": self.helper.get_esid(url + img_url),
                 "_source": {
@@ -29,7 +46,9 @@ class TorPipeline(object):
                         "domain": domain,
                         "url": url,
                         "image_url": img_url,
-                        "meta": meta
+                        "fingerprint_path": fingerprint_path,
+                        "hash": meta["hash"],
+                        "meta": meta["exif"]
                     }
                 }
             }
