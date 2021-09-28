@@ -5,18 +5,18 @@ metadata:
   name: darkweb-photo-indexer-deployment
   labels:
     app: darkweb-photo-indexer
-    tier: darkweb-photo-indexer
+    tier: recrawler
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: darkweb-photo-indexer
-      tier: darkweb-photo-indexer
+      tier: recrawler
   template:
     metadata:
       labels:
         app: darkweb-photo-indexer
-        tier: darkweb-photo-indexer
+        tier: recrawler
     spec:
       containers:
         - name: darkweb-photo-indexer
@@ -25,11 +25,11 @@ spec:
           volumeMounts:
             - name: darkweb-photo-indexer
               mountPath: /mnt/data
-            { { - if .Values.elasticsearch_ip } }
-            env:
-              - name: elasticsearchIP
-                value: { { .Values.elasticsearch_ip } }
-            { { - end } }
+          {{- if .Values.elasticsearch_ip }}
+          env:
+            - name: elasticsearchIP
+              value: {{ .Values.elasticsearch_ip }}
+          {{- end }}
       volumes:
         - name: darkweb-photo-indexer
           persistentVolumeClaim:
