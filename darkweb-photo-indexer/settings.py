@@ -16,7 +16,7 @@ DIRNAME = os.path.dirname(os.path.abspath(__file__))
 # Whether to enable logging.
 LOG_ENABLED = True
 # Minimum level to log. Available levels are: CRITICAL, ERROR, WARNING, INFO, DEBUG. For more info see Logging.
-LOG_LEVEL = "DEBUG"
+LOG_LEVEL = "INFO"
 # File name to use for logging output. If None, standard error will be used.
 # LOG_FILE = DIRNAME + "/logging"
 
@@ -57,10 +57,6 @@ DUPEFILTER_CLASS = 'darkweb-photo-indexer.dupefilter.CustomRFPDupeFilter'
 # must provide Tor HashedControlPassword
 ENABLE_TOR_REFRESH = True
 TOR_PASSWORD = ""
-
-# The maximum pages that will be allowed to crawl for any site except DOMAIN_LIMIT_EXCEPTION.
-DOMAIN_LIMIT_BASE = 50
-DOMAIN_LIMIT_RATE = 50
 
 # If enabled, Scrapy will wait a random amount of time (between 0.5 * DOWNLOAD_DELAY and 1.5 * DOWNLOAD_DELAY) while
 # fetching requests from the same website.
@@ -219,7 +215,7 @@ SPLASH_SERVICE_PORT = os.getenv('SPLASH_SERVICE_PORT')
 
 SPLASH_URL = "http://" + SPLASH_SERVICE_HOST + ":" + SPLASH_SERVICE_PORT
 
-DOWNLOAD_FAIL_ON_DATALOSS = False
+DOWNLOAD_FAIL_ON_DATALOSS = True
 
 '''
 export SPLASH_SERVICE_HOST=localhost

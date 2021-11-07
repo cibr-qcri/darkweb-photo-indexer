@@ -12,6 +12,7 @@ class TorSpider(RedisSpider):
         self.helper = TorHelper()
 
     def make_requests_from_url(self, url):
+        self.logger.info(f'start request url:{url}')
         return TorHelper.build_splash_request(url, callback=self.parse)
 
     def parse(self, response):
