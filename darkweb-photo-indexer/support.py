@@ -153,7 +153,7 @@ class TorHelper:
             data = exif_data.get(tag_id)
             if isinstance(data, bytes):
                 data = data.decode()
-            exif_dict[tag] = data
+            exif_dict[str(tag)] = str(data)
 
         return exif_dict
 

@@ -38,7 +38,6 @@ class TorPipeline(object):
                 "_id": self.helper.get_esid(url + img_url),
                 "_source": {
                     "timestamp": int(datetime.now().timestamp() * 1000),
-                    "type": "photo-index",
                     "source": "tor",
                     "method": "image",
                     "version": 1,
@@ -48,7 +47,12 @@ class TorPipeline(object):
                         "image_url": img_url,
                         "fingerprint_path": fingerprint_path,
                         "hash": meta["hash"],
-                        "meta": meta["exif"]
+                        "meta": meta["exif"],
+                        "type": meta["type"],
+                        "dimensions": {
+                            "height": meta["height"],
+                            "width": meta["width"]
+                        }
                     }
                 }
             }
