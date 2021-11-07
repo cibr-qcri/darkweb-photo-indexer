@@ -24,7 +24,7 @@ spec:
           imagePullPolicy: Always
           volumeMounts:
             - name: darkweb-photo-indexer
-              mountPath: /export/cyber-cibr
+              mountPath: /
           {{- if .Values.elasticsearch_ip }}
           env:
             - name: elasticsearchIP
