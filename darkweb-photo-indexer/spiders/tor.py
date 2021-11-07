@@ -3,6 +3,8 @@ from scrapy_redis.spiders import RedisSpider
 from ..items import TorspiderItem
 from ..support import TorHelper
 
+from scrapy.exceptions import DontCloseSpider
+
 
 class TorSpider(RedisSpider):
     name = "darkweb-photo-indexer"
@@ -18,9 +20,12 @@ class TorSpider(RedisSpider):
         images = response.data['images']
         url = response.url.strip("/")
 
-        item = TorspiderItem()
-        item["domain"] = self.helper.get_domain(url)
-        item["url"] = url
-        item["meta"] = TorHelper.fingerprint(images)
+        try:
+            item = TorspiderItem()
+            item["domain"] = self.helper.get_domain(url)
+            item["url"] = url
+            item["meta"] = TorHelper.fingerprint(images)
 
-        yield item
+            yield item
+        except:
+            raise DontCloseSpider
