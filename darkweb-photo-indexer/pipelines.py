@@ -13,7 +13,7 @@ class TorPipeline(object):
         self.es = ES7()
 
     def persist_fingerprint(self, domain, image_url, fingerprint):
-        base_path = "/mnt/data/{domain}".format(domain=domain)
+        base_path = "/export/cyber-cibr/{domain}".format(domain=domain)
         image_id = self.helper.get_esid(image_url)
         try:
             os.makedirs(base_path)
