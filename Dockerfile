@@ -1,5 +1,5 @@
 # As Scrapy runs on Python, I choose the official Python 3 Docker image.
-FROM python:3
+FROM python:3.8
 
 ARG elasticsearch_ip
 
