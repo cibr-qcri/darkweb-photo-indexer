@@ -33,9 +33,6 @@ RETRY_ENABLED = True
 # DNS_TIMEOUT = 500
 DOWNLOAD_TIMEOUT = 210
 
-# Depth limit for pages to the homepage of its site
-SITE_DEPTH_LIMIT = 50
-
 ENABLE_BDB_SEARCH = True
 
 METAREFRESH_ENABLED = False
@@ -44,7 +41,7 @@ METAREFRESH_ENABLED = False
 # if zero (default), no priority adjustment is made from depth
 # a positive value will decrease the priority, i.e. higher depth requests will be processed later ; this is commonly used when doing breadth-first crawls (BFO)
 # a negative value will increase priority, i.e., higher depth requests will be processed sooner (DFO)
-DEPTH_PRIORITY = 1
+DEPTH_PRIORITY = 0
 
 # Enables scheduling storing requests queue in redis.
 SCHEDULER = "scrapy_redis.scheduler.Scheduler"

@@ -7,7 +7,7 @@ from urllib.parse import urlparse
 
 import imagehash
 import numpy as np
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
 from PIL.ExifTags import TAGS
 from scrapy_splash import SplashRequest
 
@@ -99,9 +99,14 @@ class TorHelper:
 
     @staticmethod
     def fingerprint(images):
+        is_success = False
         fingerprint = {}
         for url, image in images.items():
-            im = Image.open(BytesIO(base64.b64decode(image)))
+            try:
+                im = Image.open(BytesIO(base64.b64decode(image)))
+            except UnidentifiedImageError as e:
+                continue
+            is_success = True
             image_type = url.split(".")[-1].lower()
             width, height = im.size
             fingerprint[url] = {
@@ -113,7 +118,7 @@ class TorHelper:
                 "fingerprint": TorHelper.get_fingerprint(im, image_type)
             }
 
-        return fingerprint
+        return is_success, fingerprint
 
     @staticmethod
     def get_fingerprint(image, image_type):
