@@ -7,13 +7,12 @@ from urllib.parse import urlparse
 
 import imagehash
 import numpy as np
-import piexif
 from PIL import Image
-from scrapy.utils.project import get_project_settings
+from PIL.ExifTags import TAGS
 from scrapy_splash import SplashRequest
 
 from .es7 import ES7
-from .prnu import extract_single
+from .prnu import extract_single, extract_multiple_aligned
 
 request_count = dict()
 
@@ -21,7 +20,6 @@ request_count = dict()
 class TorHelper:
 
     def __init__(self):
-        settings = get_project_settings()
         self.es = ES7()
 
     @staticmethod
@@ -104,33 +102,55 @@ class TorHelper:
         fingerprint = {}
         for url, image in images.items():
             im = Image.open(BytesIO(base64.b64decode(image)))
-
+            image_type = url.split(".")[-1].lower()
             fingerprint[url] = {
+                "type": image_type,
                 "exif": TorHelper.get_exif(im),
                 "hash": TorHelper.get_hashes(im),
-                "fingerprint": TorHelper.get_fingerprint(im)
+                "fingerprint": TorHelper.get_fingerprint(im, image_type)
             }
 
         return fingerprint
 
     @staticmethod
-    def get_fingerprint(image):
+    def get_fingerprint(image, image_type):
         out = None
         try:
-            out = {"W": extract_single(np.asarray(image))}
+            if image_type == "gif":
+                images = TorHelper.read_gif(image)
+                out = {"W": extract_multiple_aligned(images)}
+            else:
+                out = {"W": extract_single(np.asarray(image))}
         except ValueError:
             pass
 
         return out
 
     @staticmethod
+    def read_gif(image):
+        image.seek(0)
+        images = []
+        try:
+            while True:
+                a = np.asarray(image.convert("RGB"))
+                if len(a.shape) == 0:
+                    raise MemoryError("Too little memory to convert PIL image to array")
+                images.append(a)
+                image.seek(image.tell() + 1)
+        except EOFError:
+            pass
+        return images
+
+    @staticmethod
     def get_exif(image):
-        if "exif" not in image.info:
-            return {}
-        exif_dict = piexif.load(image.info["exif"])
-        w, h = image.size
-        exif_dict["0th"][piexif.ImageIFD.XResolution] = (w, 1)
-        exif_dict["0th"][piexif.ImageIFD.YResolution] = (h, 1)
+        exif_dict = dict()
+        exif_data = image.getexif()
+        for tag_id in exif_data:
+            tag = TAGS.get(tag_id, tag_id)
+            data = exif_data.get(tag_id)
+            if isinstance(data, bytes):
+                data = data.decode()
+            exif_dict[tag] = data
 
         return exif_dict
 

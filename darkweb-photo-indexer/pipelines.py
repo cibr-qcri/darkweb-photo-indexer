@@ -23,7 +23,7 @@ class TorPipeline(object):
         path = "{base}/{id}".format(base=base_path, id=image_id)
         sio.savemat(path, fingerprint)
 
-        return path
+        return "{base}/{id}".format(base=domain, id=image_id)
 
     def process_item(self, item, spider):
         url = item["url"]
