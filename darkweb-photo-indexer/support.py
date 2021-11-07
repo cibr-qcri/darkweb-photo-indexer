@@ -103,7 +103,10 @@ class TorHelper:
         for url, image in images.items():
             im = Image.open(BytesIO(base64.b64decode(image)))
             image_type = url.split(".")[-1].lower()
+            width, height = im.size
             fingerprint[url] = {
+                "height": height,
+                "width": width,
                 "type": image_type,
                 "exif": TorHelper.get_exif(im),
                 "hash": TorHelper.get_hashes(im),
