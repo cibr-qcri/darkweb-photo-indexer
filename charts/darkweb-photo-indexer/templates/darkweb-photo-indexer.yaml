@@ -21,7 +21,7 @@ spec:
       containers:
         - name: darkweb-photo-indexer
           image: "{{ .Values.darkweb.image.name }}:{{ .Values.darkweb.image.tag }}"
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           volumeMounts:
             - name: darkweb-photo-indexer
               mountPath: /mnt/data
