@@ -116,19 +116,21 @@ class TorHelper:
                 "type": image_type,
                 "exif": TorHelper.get_exif(im),
                 "hash": TorHelper.get_hashes(im),
-                "fingerprint": TorHelper.get_fingerprint(im, image_type)
+                "fingerprint": TorHelper.get_fingerprint(url, im, image_type)
             }
 
         return is_success, fingerprint
 
     @staticmethod
-    def get_fingerprint(image, image_type):
+    def get_fingerprint(url, image, image_type):
         out = None
         try:
             if image_type == "gif":
+                logging.info("Processing gif image with url: {0}".format(url))
                 images = TorHelper.read_gif(image)
                 out = {"W": extract_multiple_aligned(images)}
             else:
+                logging.info("Processing image with url: {0} and type: {1}".format(url, image_type))
                 out = {"W": extract_single(np.asarray(image))}
         except Exception as e:
             logging.error(e)

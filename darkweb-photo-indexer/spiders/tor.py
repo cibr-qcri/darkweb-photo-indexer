@@ -1,6 +1,3 @@
-import os
-import signal
-
 from scrapy_redis.spiders import RedisSpider
 
 from ..items import TorspiderItem
@@ -12,9 +9,6 @@ class TorSpider(RedisSpider):
 
     def __init__(self):
         RedisSpider.__init__(self)
-
-        signal.signal(signal.SIGINT, os._exit(0))
-        signal.signal(signal.SIGTERM, os._exit(0))
         self.helper = TorHelper()
 
     def make_requests_from_url(self, url):
