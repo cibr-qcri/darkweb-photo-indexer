@@ -76,7 +76,9 @@ def noise_extract(im: np.ndarray, levels: int = 4, sigma: float = 5) -> np.ndarr
             try:
                 wlet = pywt.wavedec2(im[:, :, ch], 'db4')
             except ValueError:
+                print("############################")
                 levels -= 1
+                print(levels)
                 wlet = None
         if wlet is None:
             raise ValueError('Impossible to compute Wavelet filtering for input size: {}'.format(im.shape))
