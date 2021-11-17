@@ -131,7 +131,6 @@ class TorHelper:
             else:
                 out = {"W": extract_single(np.asarray(image))}
         except Exception as e:
-            logging.error(traceback.format_exc())
             logging.error(e)
 
         return out

@@ -15,6 +15,8 @@ from scipy.ndimage import filters
 from sklearn.metrics import roc_curve, auc
 from tqdm import tqdm
 
+import warnings
+warnings.filterwarnings("ignore")
 
 class ArgumentError(Exception):
     pass
