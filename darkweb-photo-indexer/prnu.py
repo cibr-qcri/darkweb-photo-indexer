@@ -74,7 +74,7 @@ def noise_extract(im: np.ndarray, levels: int = 4, sigma: float = 5) -> np.ndarr
         wlet = None
         while wlet is None and levels > 0:
             try:
-                wlet = pywt.wavedec2(im[:, :, ch], 'db4')
+                wlet = pywt.wavedec2(im[:, :, ch], 'db4', level=levels)
             except ValueError:
                 levels -= 1
                 wlet = None
