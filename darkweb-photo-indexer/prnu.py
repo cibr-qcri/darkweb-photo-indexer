@@ -57,9 +57,6 @@ def noise_extract(im: np.ndarray, levels: int = 4, sigma: float = 5) -> np.ndarr
     :return: noise residual
     """
 
-    assert (im.dtype == np.uint8)
-    assert (im.ndim in [2, 3])
-
     im = im.astype(np.float32)
 
     noise_var = sigma ** 2
@@ -76,9 +73,7 @@ def noise_extract(im: np.ndarray, levels: int = 4, sigma: float = 5) -> np.ndarr
             try:
                 wlet = pywt.wavedec2(im[:, :, ch], 'db4')
             except ValueError:
-                print("############################")
                 levels -= 1
-                print(levels)
                 wlet = None
         if wlet is None:
             raise ValueError('Impossible to compute Wavelet filtering for input size: {}'.format(im.shape))
@@ -139,9 +134,6 @@ def extract_multiple_aligned(imgs: list, levels: int = 4, sigma: float = 5, proc
     :param sigma: estimated noise power
     :return: PRNU
     """
-    assert (isinstance(imgs[0], np.ndarray))
-    assert (imgs[0].ndim == 3)
-    assert (imgs[0].dtype == np.uint8)
 
     h, w, ch = imgs[0].shape
 
@@ -351,8 +343,6 @@ def inten_scale(im: np.ndarray) -> np.ndarray:
     :return: intensity scaled version of input x
     """
 
-    assert (im.dtype == np.uint8)
-
     T = 252
     v = 6
     out = np.exp(-1 * (im - T) ** 2 / v)
@@ -367,8 +357,6 @@ def saturation(im: np.ndarray) -> np.ndarray:
     :param im: type np.uint8
     :return: saturation map from input im
     """
-    assert (im.dtype == np.uint8)
-
     if im.ndim == 2:
         im.shape += (1,)
 
@@ -426,8 +414,6 @@ def crosscorr_2d(k1: np.ndarray, k2: np.ndarray) -> np.ndarray:
     :param k2: 2D matrix of size (h2,w2)
     :return: 2D matrix of size (max(h1,h2),max(w1,w2))
     """
-    assert (k1.ndim == 2)
-    assert (k2.ndim == 2)
 
     max_height = max(k1.shape[0], k2.shape[0])
     max_width = max(k1.shape[1], k2.shape[1])
@@ -458,12 +444,9 @@ def aligned_cc(k1: np.ndarray, k2: np.ndarray) -> dict:
 
     ndim1 = k1.ndim
     ndim2 = k2.ndim
-    assert (ndim1 == ndim2)
 
     k1 = np.ascontiguousarray(k1).reshape(k1.shape[0], -1)
     k2 = np.ascontiguousarray(k2).reshape(k2.shape[0], -1)
-
-    assert (k1.shape[1] == k2.shape[1])
 
     k1_norm = np.linalg.norm(k1, ord=2, axis=1, keepdims=True)
     k2_norm = np.linalg.norm(k2, ord=2, axis=1, keepdims=True)
@@ -483,8 +466,6 @@ def pce(cc: np.ndarray, neigh_radius: int = 2) -> dict:
     :param neigh_radius: radius around the peak to be ignored while computing floor energy
     :return: {'peak':(y,x), 'pce': peak to floor ratio, 'cc': cross-correlation value at peak position
     """
-    assert (cc.ndim == 2)
-    assert (isinstance(neigh_radius, int))
 
     out = dict()
 
@@ -517,11 +498,6 @@ def stats(cc: np.ndarray, gt: np.ndarray, ) -> dict:
     :param gt: boolean multidimensional array representing groundtruth
     :return: statistics dictionary
     """
-    assert (cc.shape == gt.shape)
-    assert (gt.dtype == np.bool)
-
-    assert (cc.shape == gt.shape)
-    assert (gt.dtype == np.bool)
 
     fpr, tpr, th = roc_curve(gt.flatten(), cc.flatten())
     auc_score = auc(fpr, tpr)
@@ -550,9 +526,6 @@ def gt(l1: list or np.ndarray, l2: list or np.ndarray) -> np.ndarray:
     """
     l1 = np.array(l1)
     l2 = np.array(l2)
-
-    assert (l1.ndim == 1)
-    assert (l2.ndim == 1)
 
     gt_arr = np.zeros((len(l1), len(l2)), np.bool)
 
