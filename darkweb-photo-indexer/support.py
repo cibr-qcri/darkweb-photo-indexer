@@ -4,7 +4,8 @@ from datetime import datetime
 from hashlib import sha256
 from io import BytesIO
 from urllib.parse import urlparse
-
+import traceback
+import logging
 import imagehash
 import numpy as np
 from PIL import Image, UnidentifiedImageError
@@ -129,8 +130,9 @@ class TorHelper:
                 out = {"W": extract_multiple_aligned(images)}
             else:
                 out = {"W": extract_single(np.asarray(image))}
-        except ValueError:
-            pass
+        except Exception as e:
+            logging.error(traceback.format_exc())
+            logging.error(e)
 
         return out
 
