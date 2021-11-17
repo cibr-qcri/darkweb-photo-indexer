@@ -108,7 +108,7 @@ class TorHelper:
             except UnidentifiedImageError as e:
                 continue
             is_success = True
-            image_type = url.split(".")[-1].lower()
+            image_type = url.split(".")[-1].split("?")[0].lower()
             width, height = im.size
             fingerprint[url] = {
                 "height": height,
@@ -127,8 +127,8 @@ class TorHelper:
         try:
             if image_type == "gif":
                 logging.info("Processing gif image with url: {0}".format(url))
-                images = TorHelper.read_gif(image)
-                out = {"W": extract_multiple_aligned(images)}
+                # images = TorHelper.read_gif(image)
+                # out = {"W": extract_multiple_aligned(images)}
             else:
                 logging.info("Processing image with url: {0} and type: {1}".format(url, image_type))
                 out = {"W": extract_single(np.asarray(image))}
