@@ -1,3 +1,4 @@
+import os
 import signal
 
 from scrapy_redis.spiders import RedisSpider
@@ -12,12 +13,9 @@ class TorSpider(RedisSpider):
     def __init__(self):
         RedisSpider.__init__(self)
 
-        signal.signal(signal.SIGINT, self.handler_stop_signals)
-        signal.signal(signal.SIGTERM, self.handler_stop_signals)
+        signal.signal(signal.SIGINT, os._exit(0))
+        signal.signal(signal.SIGTERM, os._exit(0))
         self.helper = TorHelper()
-
-    def handler_stop_signals(self, signum, frame):
-        self.logger.error("SIGTERM RECV")
 
     def make_requests_from_url(self, url):
         self.logger.info(f'start request url:{url}')
